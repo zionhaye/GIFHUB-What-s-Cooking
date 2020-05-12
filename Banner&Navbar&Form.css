@@ -1,0 +1,65 @@
+
+/*
+#Banner{
+    background-color: teal;
+    text-align:center;
+    font-size:35px;
+    margin-top:0%;
+    }
+#Banner p{
+    color:white;
+}*/
+
+
+
+#buttons{
+    position: absolute;
+    z-index: -1;
+}
+
+
+#section1{
+    margin-top: 0px;
+}
+
+
+
+.navbar{
+    background-color: teal;
+    overflow: hidden;
+    
+    }
+    
+    /* Change the color of links on hover */
+    .navbar a:hover {
+    background-color:grey;
+    color: black;
+    }
+    
+    /* Add a color to the active/current link */
+    .navbar a.nactive {
+    background-color: #4CAF50;
+    color: white;
+    }
+    
+    .navbar a {
+    float: left;
+    text-align: justify;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    }
+    
+    
+        #form{
+            margin-left:500px;
+            margin-right:500px;
+          }  
+      
+          .nav-wrapper{
+            height:100px;
+        }
+        .nav-wrapper,.nav-text{
+            font-size:50px;
+            text-align:center;
+        }

@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+    <html>
+        <head>
+            
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width">
+    
+            <!--<link href="style.css" rel="stylesheet" type="text/css" />-->
+            <!-- Compiled and minified CSS -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+            <!-- Import Google Icon Font -->
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <!-- Compiled and minified JavaScript -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+            
+            <link rel="stylesheet" href="Banner&Navbar&Form.css">
+            <link rel="stylesheet" href="backtotopstyle.css">
+
+            <title>What's Cooking - Dessert recipes</title>
+        </head>
+        <style>
+            #hero-image{
+            background-image: url('FixedBack.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            content: "";
+            position: sticky;
+            width:100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 1;
+            margin-top: 0px;
+            }
+      
+          
+          </style>
+      
+    </head>
+
+    <body id="hero-image">
+            <header>
+  
+
+                <div class="nav-wrapper teal" >
+                    <a class="nav-text" style="color:white" class="brand-logo center"> What's Cooking </a> 
+                </div>
+             
+
+               
+            <nav class="navbar"> 
+                <a href="Allpage.html" target="_self" > All   </a>
+                <a href="Veganpage.html" target="_self">Vegan   </a>
+                <a href="Vegetarianpage.html" target="_self">Vegetarian  </a>
+                <a  class="nactive"  href="Dessertpage.html" target="_self" >Dessert </a>
+                <a href="Ingredientspage.html" target="_self">My Ingredients</a>
+                <a href="Drinkspage.html" target="_self">Drinks</a>                                     
+            </nav>
+
+            </header>
+            
+            <section id="section1">
+                <button onclick="topFunction()" id="myBtn" title="Go to top">Back To Top</button>
+                <script src="backtotop.js"></script>
+
+                <form id="form">
+                    <h3>SEARCH</h3>
+                    <input type="text" name="query" id="query" placeholder="Search for all recipes"><br>
+                    <h3>INTOLERANCES</h3>
+                    <p>(Enter Items Separated By Commas)</p>
+                    <input type="text" name="intolerances" id="intolerances" placeholder="Enter Intolerances"><br>
+                    <h5>EXCLUDE INGREDIENTS</h5>
+                    <p>(Enter Items Separated By Commas)</p>
+                    <input type="text" name="exclude" id="exclude" placeholder="Enter Ingredients to Exclude"><br>
+                    <button id="buttons" class="btn waves-effect waves-light" type="button" name="action" onclick="getrecipe()"> Search
+                      <i class="material-icons right">search</i>
+                    </button>
+                </form>
+            </section>
+
+            <section id="section2">
+                
+                <div id="numresults"></div>          
+                <table>
+                    <tbody id="result">
+                                          
+                    </tbody>
+                </table>
+
+            <script>
+                           
+            var api = 'https://api.spoonacular.com/recipes/search?';
+            var query = '&query=';
+            var intolerance = '&intolerances=';
+            var apiKey = 'apiKey=0d2b982f177f4ac4a3c22e18346b37e2';
+            var number = '&number=30';
+            var diet = '&type=dessert';
+            var exclu ='&excludeIngredients='
+            var url;
+
+            var imageurl;
+             
+            
+            async function getrecipe(){
+             
+            var value1 = document.getElementById('query').value;
+            var value2 = document.getElementById('intolerances').value;
+            var value3 = document.getElementById('exclude').value;
+
+                                
+            url = api + apiKey + query + value1 +  intolerance  + value2 + number + diet + exclu + value3;
+                                          
+            for(let x=0;x<30;x++){          
+
+            let response = await fetch (url);
+            let data = await response.json();
+                         
+            let { baseUri, expires,isStale,number ,results, id , image , openLicense, readyInMinutes , servings, sourceUrl , title } = data;
+           
+            document.getElementById('numresults').innerHTML = ` <p> Results (${results.length}) </p>`
+
+            if(x==0){
+               
+                reset();
+            }
+
+            getimageurl(results,x);                  
+            drawTable(results,x,imageurl);                   
+                     
+                }
+            }
+
+            var urlstart = ' https://spoonacular.com/recipeImages/';
+            var size = '-240x150';
+            var type = '.jpg';
+
+            function getimageurl(results,x){
+                
+                imageurl = urlstart + results[x].id + size + type;
+            }
+            
+            function drawTable(results,x,imageurl){
+            
+            let result = document.querySelector('#result');
+            
+            var r1 ='Ready in ';
+            var r2 =' minutes  ';
+            var r = r1 + results[x].readyInMinutes + r2;
+
+            var s1 = 'Serves ';
+            var s2 = ' People  ';
+            var s = s1 +  results[x].servings + s2;
+
+            var t1 = 'Title : ';
+            var t = t1 + results[x].title; 
+
+            result.innerHTML += `<tr>
+            <td> <img src="${imageurl}"></td> 
+            <td>${t}</td>
+            <td>${r}</td>
+            <td>${s}</td>
+            <td> <a href="${results[x].sourceUrl}"> View Recipe </a></td>
+            </tr>`;
+
+            } 
+            
+            function reset(){
+                document.getElementById('form').reset();
+            }
+
+
+            </script>
+
+            </section>
+
+
+        </body>
+    </html>

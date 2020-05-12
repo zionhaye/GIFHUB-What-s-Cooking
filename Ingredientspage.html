@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+    <html>
+        <head>
+            
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width">
+    
+            <!--<link href="style.css" rel="stylesheet" type="text/css" />-->
+            <!-- Compiled and minified CSS -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+            <!-- Import Google Icon Font -->
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <!-- Compiled and minified JavaScript -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+            
+            <link rel="stylesheet" href="Banner&Navbar&Form.css">
+            <link rel="stylesheet" href="backtotopstyle.css">
+
+            <title>Whats Cooking - Recipes With My Ingredients</title>
+        </head>
+        <style>
+            #hero-image{
+            background-image: url('FixedBack.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            content: "";
+            position: sticky;
+            width:100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 1;
+            margin-top: 0px;
+            }
+      
+          
+          </style>
+      
+    </head>
+
+    <body id="hero-image">
+            <header>
+             
+                <div class="nav-wrapper teal" >
+                    <a  class="nav-text" style="color:white" class="brand-logo center"> What's Cooking </a> 
+                </div>
+             
+                
+            <nav class="navbar"> 
+                <a href="Allpage.html" target="_self" > All   </a>
+                <a href="Veganpage.html" target="_self">Vegan   </a>
+                <a href="Vegetarianpage.html" target="_self">Vegetarian  </a>
+                <a href="Dessertpage.html" target="_self" >Dessert </a>
+                <a class="nactive" href="Ingredientspage.html" target="_self">My Ingredients</a>
+                <a href="Drinkspage.html" target="_self">Drinks</a>                                    
+            </nav>
+
+            </header>
+            
+            <section id="section1">
+                <button onclick="topFunction()" id="myBtn" title="Go to top">Back To Top</button>
+                <script src="backtotop.js"></script>
+
+                <form id="form">
+                    <h5>SEARCH MY INGREDIENTS</h5>
+                    <p>(Enter Items Separated By Commas)</p>
+                    <input type="text" name="ingredients" id="ingredients" placeholder="Enter ingredients"><br>
+                    <button id="buttons" class="btn waves-effect waves-light" type="button" name="action" onclick="getrecipe()"> Search
+                      <i class="material-icons right">search</i>
+                    </button>
+                </form>
+            </section>
+
+            <section id="section2">
+                
+                <div id="numresults"></div>          
+                <table>
+                    <tbody id="result">
+                                          
+                    </tbody>
+                </table>
+
+            <script>
+            
+            var api1 = 'https://api.spoonacular.com/recipes/findByIngredients?';
+            var ingredients = '&ingredients=';
+            var apiKey = 'apiKey=0d2b982f177f4ac4a3c22e18346b37e2';
+            var number = '&number=10';
+            var url;
+            
+
+            var imageurl;
+             
+            async function getrecipe(){
+
+            var value1 = document.getElementById('ingredients').value;
+            
+            //console.log(value1);
+
+            url = api1 + apiKey + ingredients + value1 +  number ;
+            //console.log(url);
+
+            let response = await fetch (url);
+            let data = await response.json();
+             
+            
+            console.log(data);
+            reset();
+            traversearry1(data);
+
+            }
+
+            function traversearry1(data){
+                var z = 0;
+                var size = `${data.length}`
+                
+                for(y=0;y<size;y++){
+                    
+                    document.getElementById('numresults').innerHTML = `<p> Results (${z}) </p> `
+                    z++;
+
+                    var ID = data[y].id;
+                    getrecipeinformation(ID);
+                }
+
+            }
+
+            async function getrecipeinformation(ID){
+                        
+            var api2 = 'https://api.spoonacular.com/recipes/';
+            var apiKey = '/information?apiKey=0d2b982f177f4ac4a3c22e18346b37e2';      
+              
+            var url2 = api2 + ID + apiKey;                                     
+
+            let response = await fetch (url2);
+            let data1 = await response.json();
+
+            getimageurl(data1);
+            drawTable(data1,imageurl);
+         
+            }
+
+            
+
+            
+
+            function getimageurl(data1){
+                var urlstart = ' https://spoonacular.com/recipeImages/';
+                var size2 = '-240x150';
+                var type = '.jpg';
+
+                imageurl = urlstart + data1.id + size2 + type;
+                
+                            
+            }
+            
+           
+            function drawTable(data1,imageurl){
+            
+            let result = document.querySelector('#result');
+
+            var r1 ='Ready in ';
+            var r2 =' minutes  ';
+            var r = r1 + data1.readyInMinutes + r2;
+
+            var s1 = 'Serves ';
+            var s2 = ' People  ';
+            var s = s1 +  data1.servings + s2;
+
+            var t1 = 'Title : ';
+            var t = t1 + data1.title; 
+
+            result.innerHTML += `<tr>
+            <td> <img src="${imageurl}"></td> 
+            <td>${t}</td>
+            <td>${r}</td>
+            <td>${s}</td>
+            <td> <a href="${data1.sourceUrl}"> View Recipe </a></td>
+            </tr>`;
+
+            } 
+            
+            function reset(){
+                document.getElementById('form').reset();
+            }
+            </script>
+
+            </section>
+
+
+        </body>
+    </html>
